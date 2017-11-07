@@ -1,0 +1,202 @@
+<template name="autoCompleteInput">
+    <style type="text/css">
+        .asIn {
+            width: 100%;
+            background: #fff;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            padding: 0;
+            margin: 0;
+            height: 34px;
+        }
+
+        .asIn input {
+            border: none !important;
+            box-shadow: none !important;
+            outline: none;
+        }
+
+        .asIn ul li {
+            display: inline-block;
+        }
+
+        .has-error .leoAutoComplete-input {
+            border-color: #a94442;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+        }
+
+        .leoAutoComplete-dropDown hr {
+            margin: 0;
+        }
+
+        .leoAutoComplete-input {
+            width: 100%;
+            background: #fff;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            padding: 6px 12px;
+            height: 30px;
+        }
+
+        .leoAutoComplete-dropDown {
+            position: absolute;
+            z-index: 999 !important;
+            background: #fff;
+            text-align: left;
+            border: 1px solid #ccc;
+            padding: 6px 12px;
+
+        }
+
+        .leoAutoComplete-mask {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            min-height: 100%;
+            min-width: 100%;
+            height: auto;
+            width: auto;
+            opacity: 0;
+            z-index: 998;
+            background-color: white;
+        }
+        .leo-choices {
+            background: none;
+            padding: 0;
+            border-color: #cccccc;
+            border-radius: 4px;
+            color: #555555;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background-color: white;
+            filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        }
+        .leo-choices {
+            height: auto !important;
+            /*height: 1%;*/
+            margin: 0;
+            padding: 0 5px 0 0;
+            position: relative;
+            border: 1px solid #aaa;
+            cursor: text;
+            overflow: hidden;
+            background-color: #fff;
+            background-image: -webkit-gradient(linear, 0% 0, 0% 100%, color-stop(1%, #eee), color-stop(15%, #fff));
+            background-image: -webkit-linear-gradient(top, #eee 1%, #fff 15%);
+            background-image: -moz-linear-gradient(top, #eee 1%, #fff 15%);
+            background-image: linear-gradient(to bottom, #eee 1%, #fff 15%);
+        }
+
+        ul li .selectedItem {
+
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px;
+            background: rgba(204, 204, 204, 0.26);
+        }
+
+        ul.selectedList li {
+            padding: 3px 5px 3px 18px;
+            margin: 3px 0 3px 5px;
+            position: relative;
+            line-height: 13px;
+            color: #333;
+            cursor: default;
+            border: 1px solid #aaa;
+            border-radius: 3px;
+            -webkit-box-shadow: 0 0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
+            box-shadow: 0 0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
+            background-clip: padding-box;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background-color: #e4e4e4;
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeeeee', endColorstr='#f4f4f4', GradientType=0);
+            background-image: -webkit-gradient(linear, 0% 0, 0% 100%, color-stop(20%, #f4f4f4), color-stop(50%, #f0f0f0), color-stop(52%, #e8e8e8), color-stop(100%, #eee));
+            background-image: -webkit-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eee 100%);
+            background-image: -moz-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eee 100%);
+            background-image: linear-gradient(to top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eee 100%);
+        }
+        .leo-choices input {
+            padding: 5px;
+            margin: 1px 0;
+            font-family: sans-serif;
+            font-size: 100%;
+            color: #666;
+            outline: 0;
+            border: 0;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+            background: transparent !important;
+        }
+    </style>
+    <div class="form-group ">
+        <label class="control-label">{{title}}</label>
+        <!--<ul class="leo-choices">-->
+        <!--<input type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="leoAutoComplete-input-input" id="" style="width: 20px;" placeholder="" aria-activedescendant="leo-result-label-83">-->
+        <!--</ul>-->
+        <div class="asIn leoAutoComplete-inputBox">
+            <ul style="list-style: none;margin: 0px; padding:0px 5px; ">
+                {{#if isMulti}}
+                    {{#each selectedList}}
+                        <li class="selectedList" id="{{primaryKey this}}"><span
+                                class="selectedItem">{{viewKey
+                                this}}</span>
+                        </li>
+                    {{/each}}
+                {{else}}
+                    {{#if focused}}{{else}}
+                        {{#each selectedList}}
+                            <li class="selectedList" id="{{primaryKey this}}"><span>{{viewKey
+                                    this}}</span>
+                            </li>
+                        {{/each}}
+                    {{/if}}
+                {{/if}}
+                <li>
+                    <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false" class="leoAutoComplete-input"/>
+                </li>
+            </ul>
+        </div>
+        <input type="hidden" name="{{name}}" class="form-control leoAutoComplete-input"
+               value="{{value}}"/>
+        {{#if focused}}
+            <div class="leoAutoComplete-mask"></div>
+            <div class="leoAutoComplete-dropDown" style={{dropDownStyle}}>
+
+                {{#if selectedList}}
+                    Selected
+                    <hr/>
+                    <ul style="list-style: none;margin: 0px; padding:0px 5px ;">
+                        {{#each selectedList}}
+                            <li class="selectedList" id="{{primaryKey this}}" style="width:100%">
+                                <div class="selectedItem"> {{viewKey this}}<span style="float:right"><i
+                                        class="fa fa-times" aria-hidden="true"></i> </span></div>
+                            </li>
+                        {{/each}}
+                    </ul>
+                {{/if}}
+                {{#if searchList}}
+                    Select
+                    <hr/>
+                    <ul style="list-style: none;padding:1px 5px;">
+                        {{#each searchList}}
+                            <li class="searchList" id="{{primaryKey this}}">
+                                {{viewKey this}}</li>
+                        {{/each}}
+                    </ul>
+                {{else}}
+                    No {{#if selectedList}}more{{/if}} data.
+                {{/if}}
+            </div>
+        {{else}}
+
+        {{/if}}
+    </div>
+</template>
