@@ -144,7 +144,7 @@ Template.autoCompleteInput.events({
         // focusOnInput(e, t);
     },
     "focus .leoAutoComplete-input": function (e, t) {
-        positionTheDropDown(e,t)
+        //positionTheDropDown(e,t)
         focusOnInput(e, t);
 
     },

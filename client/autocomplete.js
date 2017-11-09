@@ -148,9 +148,15 @@ Template.autoCompleteInput.events({
         focusOnInput(e, t);
 
     },
+    "click .leoAutoComplete-inputBox ul":function (e,t) {
+        if(!t.isFocused.get() && !t.isMulti.get()){
+			
+        }
+        $(e.currentTarget).closest(".leoAutoComplete-input").focus()
+    },
     "click .leoAutoComplete-inputBox":function (e,t) {
         if(!t.isFocused.get() && !t.isMulti.get()){
-
+		
         }
         $(e.currentTarget).closest(".leoAutoComplete-input").focus()
     }
@@ -215,4 +221,21 @@ function focusOnInput(e, t) {
     })
 }
 
-
+function positionTheDropDown(e,t){
+    let offset, pos, position, rule, width;
+    position = $(e.currentTarget).position();
+    width = 'width:'+$(e.currentTarget).closest(".leoAutoComplete-inputBox").width()+"px;";
+    let dropDownStyle = "-webkit-border-bottom-right-radius: 4px;\n" +
+        "-webkit-border-bottom-left-radius: 4px;\n" +
+        "-moz-border-radius-bottomright: 4px;\n" +
+        "-moz-border-radius-bottomleft: 4px;\n" +
+        "border-bottom-right-radius: 4px;\n" +
+        "border-bottom-left-radius: 4px;\n" +
+        "padding: 6px 12px;"+width;
+    t.dropDownStyle.set(dropDownStyle);
+    // let selector = t.selector.get();
+    // if(selector && selector.position && selector.position === 'top' && position && position.top){
+    //     let bottom = "bottom:"+position.top+"px;";
+    //     dropDownStyle = dropDownStyle+bottom;
+    // }
+}

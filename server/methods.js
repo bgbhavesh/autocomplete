@@ -1,4 +1,4 @@
-var objectPath = require("object-path");
+//var objectPath = require("object-path");
 Meteor.methods({
         autoCompleteValue:function (selectedList,collectionName,limit,primaryKey,key,textValue,matchCase,sort) {
         check(selectedList,Array);

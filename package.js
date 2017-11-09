@@ -1,6 +1,6 @@
 Package.describe({
   name: 'bucky:autocomplete',
-  version: '0.0.3',
+  version: '0.0.4',
   // Brief, one-line summary of the package.
   summary: 'an autocomplete with meteor call',
   // URL to the Git repository containing the source code for this package.
@@ -11,7 +11,7 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
-  api.versionsFrom('1.5.2');
+  api.versionsFrom('1.4.4.3');
   api.use('ecmascript');
   api.use([
         'check',
@@ -32,6 +32,10 @@ Package.onUse(function(api) {
 	api.addFiles('client/autocomplete.js', 'client');
 	api.addFiles('client/autocomplete.html', 'client');
   api.mainModule('autocomplete.js');
+});
+Npm.depends({
+    // "object-path":"0.11.4"
+//    "file-saver": "1.3.3"
 });
 Package.onTest(function(api) {
   api.use('ecmascript');
