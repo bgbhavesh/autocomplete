@@ -17,6 +17,7 @@
 
         .asIn ul li {
             display: inline-block;
+            cursor:pointer;
         }
 
         .has-error .leoAutoComplete-input {
@@ -121,6 +122,7 @@
             background-image: -moz-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eee 100%);
             background-image: linear-gradient(to top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eee 100%);
         }
+
         .leo-choices input {
             padding: 5px;
             margin: 1px 0;
@@ -151,19 +153,19 @@
                 {{else}}
                     {{#if focused}}{{else}}
                         {{#each selectedList}}
-                            <li class="selectedList" id="{{primaryKey this}}"><span>{{viewKey
-                                    this}}</span>
+                            <li class="selectedList" id="{{primaryKey this}}">
+                                <span>{{viewKey this}}</span>
                             </li>
                         {{/each}}
                     {{/if}}
                 {{/if}}
                 <li>
-                    <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false" class="leoAutoComplete-input"/>
+                    <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false" class="leoAutoComplete-input" tempId="{{uniqueId}}"/>
                 </li>
             </ul>
         </div>
-        <input type="hidden" name="{{name}}" class="form-control leoAutoComplete-input"
-               value="{{value}}"/>
+        <input type="hidden" name="{{name}}" class="form-control "
+               value="{{value}}" tId="{{uniqueId}}"/>
         {{#if focused}}
             <div class="leoAutoComplete-mask"></div>
             <div class="leoAutoComplete-dropDown" style={{dropDownStyle}}>

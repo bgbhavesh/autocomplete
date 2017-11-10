@@ -7,8 +7,5 @@
             collectionName: "collections.productCategory",
             limit: 10,
             matchCase:{isActive:true},
-			extraAttributes:{
-                mandatory:"true"
-            }
         };
     }
