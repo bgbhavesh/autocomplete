@@ -42,12 +42,13 @@ Template.autoCompleteInput.onCreated(function () {
     });
 });
 Template.autoCompleteInput.onRendered(function () {
-	let uniqueId = Template.instance().uniqueId.get() || "123"
+    let template = this;
+    let uniqueId = Template.instance().uniqueId.get() || "123";
     $("input").focus(function (e) {
-        if (!$(e.currentTarget).hasClass("leoAutoComplete-input")) {
+        if (uniqueId !== $(e.currentTarget).attr()) {
             template.isFocused.set(false);
         }
-    })
+    });
     let extraAttributes = Template.currentData().settings.extraAttributes || {};
     let x;
     for (x in extraAttributes) {

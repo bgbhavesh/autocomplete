@@ -1,6 +1,6 @@
 Package.describe({
   name: 'bucky:autocomplete',
-  version: '0.0.7',
+  version: '0.0.8',
   // Brief, one-line summary of the package.
   summary: 'an autocomplete with meteor call',
   // URL to the Git repository containing the source code for this package.
