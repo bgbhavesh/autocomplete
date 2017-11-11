@@ -45,7 +45,7 @@ Template.autoCompleteInput.onRendered(function () {
     let template = this;
     let uniqueId = Template.instance().uniqueId.get() || "123";
     $("input").focus(function (e) {
-        if (uniqueId !== $(e.currentTarget).attr()) {
+        if (uniqueId !== $(e.currentTarget).attr('tempId')) {
             template.isFocused.set(false);
         }
     });

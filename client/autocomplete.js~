@@ -8,7 +8,9 @@
 import './autocomplete.html'
 Template.autoCompleteInput.onCreated(function () {
     let template = this;
-
+    let rand = Random.id();
+    template.uniqueId = new ReactiveVar();
+    template.uniqueId.set(rand);
     template.dropDownStyle = new ReactiveVar();
     template.dropDownStyle.set('padding: 6px 12px');
     template.selectedList = new ReactiveVar();
@@ -32,18 +34,33 @@ Template.autoCompleteInput.onCreated(function () {
     template.selector.set(matchCase);
     let field = Template.currentData().field || {};
     template.selector.set(field);
-    // leoAutoCompleteVal()
+    setPassedValues(template, Template.currentData());
     template.autorun(function () {
         let table = Template.currentData().table;
         let selector = Template.currentData().settings || {};
         template.selector.set(selector);
     });
-    setPassedValues(template, Template.currentData());
 });
 Template.autoCompleteInput.onRendered(function () {
+    let template = this;
+    let uniqueId = Template.instance().uniqueId.get() || "123";
+    $("input").focus(function (e) {
+        if (uniqueId !== $(e.currentTarget).attr()) {
+            template.isFocused.set(false);
+        }
+    });
+    let extraAttributes = Template.currentData().settings.extraAttributes || {};
+    let x;
+    for (x in extraAttributes) {
+		if(x === 'name' || x === 'type' || x === 'autocomplete' || x === 'autocapitalize' || x === 'spellcheck'|| x === 'class'|| x === 'tempId'){}
+        $("[tId='" + uniqueId + "']").attr(x, extraAttributes[x])
+    }
 });
 
 Template.autoCompleteInput.helpers({
+    uniqueId: function () {
+        return Template.instance().uniqueId.get() || "123"
+    },
     primaryKey: function (obj) {
         let key = Template.instance().primaryKey.get() || "_id";
         return obj[key]
@@ -58,7 +75,7 @@ Template.autoCompleteInput.helpers({
     name: function () {
         return this.name || "";
     },
-    isMulti:function () {
+    isMulti: function () {
         return Template.instance().isMulti.get();
     },
     value: function () {
@@ -70,12 +87,12 @@ Template.autoCompleteInput.helpers({
         });
         if (isMulti)
             return primaryKeys;
-        else return primaryKeys[0]||""
+        else return primaryKeys[0] || ""
     },
     focused: function () {
         return Template.instance().isFocused.get();
     },
-    dropDownStyle:function() {
+    dropDownStyle: function () {
         return Template.instance().dropDownStyle.get()
     },
     dropdownWidth: function () {
@@ -90,6 +107,7 @@ Template.autoCompleteInput.helpers({
 });
 Template.autoCompleteInput.events({
     "click li.searchList": function (e, t) {
+        e.preventDefault();
         let selectedList = t.selectedList.get();
         let primaryKey = t.primaryKey.get();
         let key = t.key.get();
@@ -112,6 +130,7 @@ Template.autoCompleteInput.events({
         focusOnInput(e, t);
     },
     "click li.selectedList span": function (e, t) {
+        e.preventDefault();
         let thisItem = this;
         let selectedList = t.selectedList.get();
         let primaryKey = t.primaryKey.get();
@@ -137,32 +156,29 @@ Template.autoCompleteInput.events({
     },
     "click .leoAutoComplete-mask": function (e, t) {
         t.isFocused.set(false);
-        $(e.currentTarget).closest(".leoAutoComplete-input").val("");
+        $(e.currentTarget).find('input[class="leoAutoComplete-input"]').val("");
     },
     "click .leoAutoComplete-dropDown": function (e, t) {
-        e.preventDefault();
+        // e.preventDefault();
         // focusOnInput(e, t);
     },
     "focus .leoAutoComplete-input": function (e, t) {
-        positionTheDropDown(e,t)
+        positionTheDropDown(e, t);
         focusOnInput(e, t);
 
     },
-    "click .leoAutoComplete-inputBox":function (e,t) {
-        if(!t.isFocused.get() && !t.isMulti.get()){
-
-        }
+    "click .leoAutoComplete-inputBox": function (e, t) {
         $(e.currentTarget).find('input[class="leoAutoComplete-input"]').focus();
     }
 });
 
 function setPassedValues(t, currentData) {
-    let settings = t.selector.curValue;
+    let settings = t.data.settings;
     let collectionName = settings.collectionName;
     let limit = settings.limit || 10;
+    let matchCase = settings.matchCase || {};
     let primaryKey = t.primaryKey.get() || _id;
     let key = t.key.get() || _id;
-    let matchCase = settings.matchCase || {};
     let textValue = $(".leoAutoComplete-input").val() || "";
     textValue = textValue.trim();
     // $(".leoAutoComplete-input").focus();
@@ -215,17 +231,17 @@ function focusOnInput(e, t) {
     })
 }
 
-function positionTheDropDown(e,t){
+function positionTheDropDown(e, t) {
     let offset, pos, position, rule, width;
     position = $(e.currentTarget).position();
-    width = 'width:'+$(e.currentTarget).closest(".leoAutoComplete-inputBox").width()+"px;";
+    width = 'width:' + $(e.currentTarget).closest(".leoAutoComplete-inputBox").width() + "px;";
     let dropDownStyle = "-webkit-border-bottom-right-radius: 4px;\n" +
         "-webkit-border-bottom-left-radius: 4px;\n" +
         "-moz-border-radius-bottomright: 4px;\n" +
         "-moz-border-radius-bottomleft: 4px;\n" +
         "border-bottom-right-radius: 4px;\n" +
         "border-bottom-left-radius: 4px;\n" +
-        "padding: 6px 12px;"+width;
+        "padding: 6px 12px;" + width;
     t.dropDownStyle.set(dropDownStyle);
     // let selector = t.selector.get();
     // if(selector && selector.position && selector.position === 'top' && position && position.top){
