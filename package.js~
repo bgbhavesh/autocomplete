@@ -1,6 +1,6 @@
 Package.describe({
   name: 'bucky:autocomplete',
-  version: '0.0.9',
+  version: '0.0.10',
   // Brief, one-line summary of the package.
   summary: 'an autocomplete with meteor call',
   // URL to the Git repository containing the source code for this package.
@@ -28,7 +28,7 @@ Package.onUse(function(api) {
         'reactive-dict',
         'meteorhacks:aggregate@1.3.0'
     ]);
-    api.addFiles('server/methods.js', 'server');
+    api.addFiles('methods/methods.js', 'server');
 	api.addFiles('client/autocomplete.js', 'client');
 	api.addFiles('client/autocomplete.html', 'client');
   api.mainModule('autocomplete.js');

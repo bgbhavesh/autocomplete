@@ -5,6 +5,7 @@
 // export const name = 'meteortable';
 //import commonTabular from "../lib/utils.js"
 //import commonTabular from "../lib/_common.js"
+var objectPath = require("object-path");
 import './autocomplete.html'
 Template.autoCompleteInput.onCreated(function () {
     let template = this;
@@ -45,7 +46,7 @@ Template.autoCompleteInput.onRendered(function () {
     let template = this;
     let uniqueId = Template.instance().uniqueId.get() || "123";
     $("input").focus(function (e) {
-        if (uniqueId !== $(e.currentTarget).attr('tempId')) {
+        if (uniqueId !== $(e.currentTarget).attr('tempId') && template.isFocused.get()) {
             template.isFocused.set(false);
         }
     });
@@ -58,6 +59,9 @@ Template.autoCompleteInput.onRendered(function () {
 });
 
 Template.autoCompleteInput.helpers({
+    checkEquals:function (a,b,result,falseResult) {
+        return (a === b) ? result : falseResult;
+    },
     uniqueId: function () {
         return Template.instance().uniqueId.get() || "123"
     },
@@ -67,13 +71,21 @@ Template.autoCompleteInput.helpers({
     },
     viewKey: function (obj) {
         let key = Template.instance().key.get() || "_id";
-        return obj[key]
+        let arrayKeys =key.split(",");
+        let outValue = '';
+        _.each(arrayKeys,function (k) {
+            outValue+= (objectPath.get(obj,k)||"")+" ";
+        });
+        return outValue;
     },
     title: function () {
         return this.title || "";
     },
     name: function () {
         return this.name || "";
+    },
+    id: function () {
+        return this.id || "";
     },
     isMulti: function () {
         return Template.instance().isMulti.get();
@@ -107,26 +119,21 @@ Template.autoCompleteInput.helpers({
 });
 Template.autoCompleteInput.events({
     "click li.searchList": function (e, t) {
-        e.preventDefault();
+        // e.preventDefault();
         let selectedList = t.selectedList.get();
         let primaryKey = t.primaryKey.get();
         let key = t.key.get();
-        let isMulti = t.isMulti.get()
+        let isMulti = t.isMulti.get();
         if (isMulti) {
-            selectedList.push({
-                [primaryKey]: this[primaryKey],
-                [key]: this[key]
-            });
+            selectedList.push(this);
         }
         else {
-            selectedList = [{
-                [primaryKey]: this[primaryKey],
-                [key]: this[key]
-            }]
+            selectedList = [this]
         }
 
         t.selectedList.set(selectedList);
         // console.log(selectedList)
+        $("input[tId='"+Template.instance().uniqueId.get()+"']").trigger("change");
         focusOnInput(e, t);
     },
     "click li.selectedList span": function (e, t) {
@@ -145,6 +152,7 @@ Template.autoCompleteInput.events({
         }
         t.selectedList.set(selectedList);
         // console.log(selectedList)
+        $("input[tId='"+Template.instance().uniqueId.get()+"']").trigger("change");
         focusOnInput(e, t);
     },
     "keyup .leoAutoComplete-input": function (e, t) {
@@ -193,16 +201,10 @@ function setPassedValues(t, currentData) {
         }
         if (data) {
             if (isMulti) {
-                selectedList.push({
-                    [primaryKey]: data[primaryKey],
-                    [key]: data[key]
-                });
+                selectedList.push(data);
             }
             else {
-                selectedList = [{
-                    [primaryKey]: data[primaryKey],
-                    [key]: data[key]
-                }]
+                selectedList = [data]
             }
             t.selectedList.set(data);
         }
@@ -227,10 +229,10 @@ function focusOnInput(e, t) {
         }
         if (data) {
             t.searchList.set(data);
+            t.isFocused.set(false);
         }
     })
-}
-
+};
 function positionTheDropDown(e, t) {
     let offset, pos, position, rule, width;
     position = $(e.currentTarget).position();

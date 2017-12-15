@@ -37,8 +37,13 @@ Meteor.methods({
            return list[primaryKey]
         });
         let regEx = new RegExp("^"+textValue, 'i');
-        _.extend(matchCase,{[key]:regEx});
-        _.extend(matchCase,{[primaryKey]:{$nin:primaryKeys  }});
+        let searchQuery = [];
+        let arrayKeys =key.split(",");
+        _.each(arrayKeys,function (field) {
+            searchQuery.push({[field]:regEx})
+        });
+        _.extend(matchCase,{$or:searchQuery});//
+        _.extend(matchCase,{[primaryKey]:{$nin:primaryKeys}});
         let aggregateQuery = [
             {   "$match":matchCase},
             {   "$limit":limit},

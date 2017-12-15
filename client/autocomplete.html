@@ -48,48 +48,6 @@
 
         }
 
-        .leoAutoComplete-mask {
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            min-height: 100%;
-            min-width: 100%;
-            height: auto;
-            width: auto;
-            opacity: 0;
-            z-index: 998;
-            background-color: white;
-        }
-        .leo-choices {
-            background: none;
-            padding: 0;
-            border-color: #cccccc;
-            border-radius: 4px;
-            color: #555555;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            background-color: white;
-            filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
-            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-        }
-        .leo-choices {
-            height: auto !important;
-            /*height: 1%;*/
-            margin: 0;
-            padding: 0 5px 0 0;
-            position: relative;
-            border: 1px solid #aaa;
-            cursor: text;
-            overflow: hidden;
-            background-color: #fff;
-            background-image: -webkit-gradient(linear, 0% 0, 0% 100%, color-stop(1%, #eee), color-stop(15%, #fff));
-            background-image: -webkit-linear-gradient(top, #eee 1%, #fff 15%);
-            background-image: -moz-linear-gradient(top, #eee 1%, #fff 15%);
-            background-image: linear-gradient(to bottom, #eee 1%, #fff 15%);
-        }
-
         ul li .selectedItem {
 
             border: 1px solid #ccc;
@@ -164,9 +122,9 @@
                 </li>
             </ul>
         </div>
-        <input type="hidden" name="{{name}}" class="form-control" value="{{value}}" tId="{{uniqueId}}"/>
+        <input type="hidden" id="{{id}}" name="{{name}}" class="form-control" value="{{value}}" tId="{{uniqueId}}"/>
         {{#if focused}}
-            <div class="leoAutoComplete-mask"></div>
+            <div class="leoAutoComplete-mask" style="position: fixed;top: 0;bottom: 0;left: 0;right: 0;min-height: 100%;min-width: 100%;height: auto;width: auto;opacity: 0;z-index: 998;background-color: white;"></div>
             <div class="leoAutoComplete-dropDown" style={{dropDownStyle}}>
 
                 {{#if selectedList}}
